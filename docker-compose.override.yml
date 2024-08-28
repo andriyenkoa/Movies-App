@@ -1,0 +1,30 @@
+version: '3'
+services:
+  swagger:
+    container_name: swagger
+    image: swaggerapi/swagger-ui
+    expose:
+      - "8080"
+    environment:
+      SWAGGER_JSON: /swagger.yaml
+    volumes:
+      - ./swagger/openapi.yaml:/swagger.yaml
+
+  nginx:
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/dev_configs:/etc/nginx/conf.d:ro
+      - static_files:/home/app/static:ro
+
+  service:
+    env_file:
+      - ./.env.example
+
+  theatre-db:
+    ports:
+      - "5432:5432"
+
+  elasticsearch:
+    ports:
+      - "9200:9200"
+      - "9300:9300"
